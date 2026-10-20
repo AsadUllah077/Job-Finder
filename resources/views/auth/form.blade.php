@@ -1,0 +1,13 @@
+<x-layout :title="['login'=>'Sign in','register'=>'Create account','forgot'=>'Reset password','reset'=>'Choose a new password'][$mode]">
+<div class="auth-wrap"><div class="panel"><div class="eyebrow">YOUR CAREER, IN FOCUS</div><h1>{{ ['login'=>'Welcome back.','register'=>'Find your next chapter.','forgot'=>'Let’s get you back in.','reset'=>'A fresh start.'][$mode] }}</h1><p class="muted" style="margin-bottom:24px">{{ $mode==='register'?'A focused workspace for your next PHP or Laravel role.':'Your opportunities are waiting.' }}</p>
+<form method="POST" action="{{ ['login'=>route('login'),'register'=>route('register'),'forgot'=>route('password.email'),'reset'=>route('password.update')][$mode] }}">@csrf
+@if($mode==='reset')<input type="hidden" name="token" value="{{ $token }}">@endif
+@if($mode==='register')<div class="field"><label for="name">Your name</label><input id="name" name="name" value="{{ old('name') }}" autocomplete="name" required autofocus></div>@endif
+<div class="field"><label for="email">Email address</label><input id="email" type="email" name="email" value="{{ old('email',$email??'') }}" autocomplete="email" required></div>
+@if($mode!=='forgot')<div class="field"><label for="password">Password</label><input id="password" type="password" name="password" autocomplete="{{ $mode==='login'?'current-password':'new-password' }}" required @if($mode!=='login') minlength="12" @endif></div>@endif
+@if(in_array($mode,['register','reset']))<p class="small muted" style="margin:-5px 0 16px">At least 12 characters, with uppercase, lowercase, and a number.</p><div class="field"><label for="password_confirmation">Confirm password</label><input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password" required></div>@endif
+@if($mode==='login')<label class="check"><input type="checkbox" name="remember" value="1">Keep me signed in</label>@endif
+<button class="btn primary">{{ ['login'=>'Sign in','register'=>'Create your account','forgot'=>'Request reset link','reset'=>'Update password'][$mode] }}<x-icon name="arrow-right"/></button></form>
+@if($mode==='login')<p><a class="source-link" href="{{ route('password.request') }}">Forgot your password?</a></p><hr class="divider"><p class="muted">New here? <a class="source-link" href="{{ route('register') }}">Create an account</a></p>@else<p><a class="source-link" href="{{ route('login') }}">Back to sign in</a></p>@endif
+</div><p class="muted" style="text-align:center;margin-top:18px">You can always <a class="source-link" href="{{ route('jobs.index') }}">browse jobs without an account</a>.</p></div>
+</x-layout>
